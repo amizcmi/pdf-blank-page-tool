@@ -1,0 +1,8 @@
+flask
+pywebview
+PyPDF2
+pycryptodome
+pywin32
+requests
+pillow
+pyinstaller 
