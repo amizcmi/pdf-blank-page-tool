@@ -26,3 +26,7 @@
 - 依赖包见 requirements.txt
 
 ### 本地开发 
+
+运行界面
+![图片](https://github.com/user-attachments/assets/e1304697-dc37-4066-82b0-47c2f6459b53)
+
