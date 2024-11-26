@@ -21,10 +21,10 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.12'
     
@@ -40,21 +40,14 @@ jobs:
     
     - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.event.inputs.version || github.ref }}
-        release_name: Release ${{ github.event.inputs.version || github.ref }}
-        draft: false
-        prerelease: ${{ github.event.inputs.prerelease || false }}
+      run: |
+        gh release create "${{ github.event.inputs.version || github.ref_name }}" --title "Release ${{ github.event.inputs.version || github.ref_name }}" --draft=false --prerelease=${{ github.event.inputs.prerelease || false }}
+        echo "release_url=$(gh api repos/${{ github.repository }}/releases/latest --jq .upload_url)" >> $GITHUB_ENV
     
     - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./dist/PDF空白页添加工具.exe
-        asset_name: PDF空白页添加工具.exe
-        asset_content_type: application/octet-stream 
+      run: |
+        gh release upload "${{ github.event.inputs.version || github.ref_name }}" "./dist/PDF空白页添加工具.exe"
